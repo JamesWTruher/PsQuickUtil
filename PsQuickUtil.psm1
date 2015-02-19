@@ -1,15 +1,21 @@
 function Get-InstallationEvents 
 {
     param ( 
+        [Parameter()]
         $MaxEvents = [int]::MaxValue ,
+        [Parameter()]
         [switch]$oldest,
-        [string]$FilterXPath
+        [Parameter()]
+        [string]$FilterXPath,
+        #KnowledgeBase number
+        [Parameter()]
+        [string]$KB = "."
         )
     $winEventArgs = @{
-        ProviderName = "*WUSA*"
+        ProviderName = "Microsoft-Windows-WUSA"
         MaxEvents = $MaxEvents
         }
     if ( $oldest ) { $winEventArgs['Oldest'] = $true }
     if ( $FilterXPath ) { $winEventArgs['FilterXPath'] = $filterXPath }
-    Get-WinEvent @winEventArgs
+    Get-WinEvent @winEventArgs |where Message -match $KB
 }
